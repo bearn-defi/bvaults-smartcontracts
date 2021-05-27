@@ -1,0 +1,87 @@
+trezor:                     0x4C4871e1c48Bc7C1e86d9cf3D41846E9A2C24c36
+trezor#2 (proxy admin):     0x07f6521bBCB71d166d6E2e116D21b6D21F2Dd5Fa
+
+===================================================
+
+BFI                     = 0x81859801b01764d4f0fa5e64729f5a6c3b91435b
+BDO                     = 0x190b589cf9Fb8DDEabBFeae36a813FFb2A702454
+sBDO                    = 0x0d9319565be7f53CeFE84Ad201Be3f40feAE2740
+WBNB                    = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c
+BUSD                    = 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56
+
+BREW                    = 0x790Be81C3cA0e53974bE2688cDb954732C9862e1
+Ramen                   = 0x4F47A0d15c1E53F3d94c069C7D16977c29F9CB6B
+
+ProxyTreasury           = 0x5D42dc503763dD1e7A1B510b055150Cc5754656B
+BvaultsBank             = 0xB390B07fcF76678089cb12d8E615d5Fe494b01Fb
+
+BvaultsHarvestInfo      = 0x3372694569003dBA8722026666F6777790E9c1D5
+
+========================================================
+BLOCKS_PER_WEEK = 201600
+BLOCKS_PER_DAY = 28800
+========================================================
+
+1.  Checkout code
+    git clone https://gitlab.com/casinob.finance/bvaults-smartcontracts
+    cd bvaults-smartcontracts
+
+2.  Install lib and compile
+    yarn && yarn build
+
+3.  Compile and deploy on remix:
+    - Goto https://remix.ethereum.org/
+    - use latest verified code at:
+        + For staking single asset pool contract-verify/BvaultsStrategyStaking.sol
+        + For LP pool contract-verify/BvaultsStrategy.sol
+    - Search for function to get pending reward, change to correct function name:
+        return IPancakeswapFarm(farmContractAddress).pendingShare(pid, address(this)).add(_earnedBal);
+        pendingShare -> pendingCake
+                        pendingMDO
+                        pendingBDO
+        or add more function to IPancakeswapFarm interface if missed
+    - Enable optimization to 999999
+    - Compile
+    - Deploy
+    BvaultsStrategy constructor:
+            address _controller = 0x4C4871e1c48Bc7C1e86d9cf3D41846E9A2C24c36 (set to deployer, and transfer to Bank later)
+
+            bool _isCAKEStaking = false
+
+            bool _isAutoComp = true
+
+            address _farmContractAddress = // MasterChef contract
+
+            uint256 _pid = // Pool Id of the staked LP
+
+            address _wantAddress = // the staked LP (CAKE-LP SOUP/WBNB for example)
+
+            address _earnedAddress = // the reward token (SOUPS for example)
+
+            address _uniRouterAddress = 0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F // Pancakeswap (or other swap if the pool uses different Dex)
+
+            address[] memory _buyBackToken1Info = ["0x81859801b01764D4f0Fa5E64729f5a6C3b91435b","0xaaaf5d9923Be358Ea0b6205Ef2A3B929D460Ac7A","0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"]
+            (buyBackToken1, buyBackAddress1, buyBackToken1MidRouteAddress)
+
+            address[] memory _buyBackToken2Info = ["0x190b589cf9Fb8DDEabBFeae36a813FFb2A702454","0x5D42dc503763dD1e7A1B510b055150Cc5754656B","0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"]
+            (buyBackToken2, buyBackAddress2, buyBackToken2MidRouteAddress)
+
+            address[] memory _token0Info = // SOUP, WBNB
+            (token0Address, token0MidRouteAddress)
+
+            address[] memory _token1Info = // WBNB, WBNB
+            (token1Address, token1MidRouteAddress)
+
+    - (Optional): setEarnedToBuyBackToken1Path and setEarnedToBuyBackToken2Path after deploy
+
+
+========================================================
+========================================================
+// 000000000000000000
+
+// 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+
+// 0x0000000000000000000000000000000000000000
+
+2^48-1 = 0xffffffffffff = 281474976710655
